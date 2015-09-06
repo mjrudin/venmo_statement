@@ -1,7 +1,39 @@
-
-<div class = "container">
-			<h1>hello world</h1>
+<div class = "outer_statement">
+      <div class="logo_container">
+        <h1>$0.00</h1>
+        <%= image_tag('logo.png',:size => '260x90',:class => "logo")%>
+      </div>
+      
+     <table>
+       <% @venmo_data.each do |payment| %>
+           <% if payment["status"] == "settled" %>
+               <tr> 
+                 <td><li class = "date">
+                 <%=Time.parse(payment["date_created"]).strftime("%m/%d/%y")%> 
+                 <li><%= payment["actor"]["display_name"]%> 
+                 <% if payment["action"] == "pay"%>paid<%else%>charged<% end %>
+                 <%= payment["target"]["user"]["display_name"]%>
+                 <td><%= payment["note"]%>
+                 <td class="amount">$ <%= payment["amount"]%>
+              </tr>
+          <% end %>
+       <% end %>
+     </table>
 
 </div>
-  
-  
+
+
+<script type="text/javascript">  
+//these will hold the totals
+var sum = 0;
+
+//reference the rows you want to add
+//this will not include the header row
+var rows = $(".amount");
+rows.each(function() {
+//each time we add the cell to the total
+sum += parseFloat($(this).html().substring(2));
+});
+//then output them to the elements
+$("h1").html("$" + sum);
+</script>
